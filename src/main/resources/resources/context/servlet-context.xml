@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/context/spring-mvc.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
+	    
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	
+	<resources mapping="/**" location="/" />
+
+	<!-- session check interceptor
+	<beans:bean id="sessionCheckInterceptor" class="kr.web.dev.common.interceptor.SessionCheckInterceptor" />
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/*" />
+			<beans:ref bean="sessionCheckInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	 -->
+	
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+	<!-- 
+	<context:component-scan base-package="kr.web.dev.controller" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		 
+	</context:component-scan>
+	-->
+	
+	<!-- validator package scan
+	<context:component-scan base-package="kr.web.dev.model.validation">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component" /> 
+	</context:component-scan>
+	 -->
+	 
+	<!-- service package scan
+	<context:component-scan base-package="kr.web.dev.service">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	 -->
+	 
+	<aop:aspectj-autoproxy />
+	
+	<beans:bean id="loggingAspect" class="kr.web.dev.common.aop.LoggingAspect" />
+	
+	<context:component-scan base-package="kr.web.dev">
+	   <context:include-filter type="regex" expression="(controller|service|model.validation)\..*"/>
+	</context:component-scan>
+	
+
+	
+    <!-- define json converter -->
+	<beans:bean id="jsonMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+	<beans:bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<beans:property name="messageConverters">
+			<beans:list>
+				<beans:ref bean="jsonMessageConverter" />
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	
+	<!-- 
+	<websocket:message-broker application-destination-prefix="/app">
+		<websocket:stomp-endpoint path="/ws">
+			<websocket:sockjs/>
+		</websocket:stomp-endpoint>
+		<websocket:simple-broker prefix="/topic"/>
+	</websocket:message-broker>
+	-->
+
+</beans:beans>

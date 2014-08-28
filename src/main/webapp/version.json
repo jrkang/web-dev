@@ -1,0 +1,19 @@
+{
+    "name": "webdev",
+    "description": "",
+    "version": "0.0.1",
+    "homepage": "https://idess.tistory.com/",
+    "author": "idess <m.idess@gmail.com> (https://github.com/idess/)",
+    "dependencies": {
+        "html5": "3.7.2",
+        "Bootstrap": "3.2.0",
+        "jQuery": "1.11.1",
+        "RequireJS": "2.1.14",
+        "text.js": "2.0.12",
+        "i18n.js": "2.0.4",
+        "Backbone.js": "1.1.2",
+        "Underscore.js": "1.6.0",
+        "D3.js": 3.4.11,
+        "Ephoch": 0.6.0
+    }
+}

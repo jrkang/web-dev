@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.web.dev.mapper.AccountMapper">
+
+	<cache />
+	
+	<resultMap type="kr.web.dev.model.vo.AccountVO" id="accountResultMap">
+		<id property="seq" column="seq" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="role" column="role" />
+		<result property="enabled" column="enabled" />
+		<result property="mail" column="mail" />
+		<result property="sms" column="sms" />
+	</resultMap>
+	
+	<select id="selectAccountByUsername" parameterType="string" resultMap="accountResultMap">
+		SELECT seq, username, password, role, enabled, mail, sms FROM TB_ACCT WHERE username = #{string}
+	</select>
+	
+	<select id="selectAccounts" resultMap="accountResultMap">
+		SELECT seq, username, password, role, enabled, mail, sms FROM TB_ACCT
+	</select>
+
+</mapper>

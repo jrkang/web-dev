@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	">
+	
+	<!-- properties about defaultDB(mariaDB) -->
+	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+	           <value>classpath:resources/conf/db.properties</value>
+			</list>
+		</property>
+		<!-- 
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		 -->
+	</bean>
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+	    <property name="driverClassName" value="${jdbc.driverClassName}" />
+	    <property name="url" value="${jdbc.url}" />
+	    <property name="username" value="${jdbc.username}" />
+	    <property name="password" value="${jdbc.password}" />
+	    <!-- 
+	    <property name="initialSize" value="34" />
+	    <property name="maxActive" value="377" />
+	    <property name="maxIdle" value="233" />
+	    <property name="minIdle" value="89" />
+	    <property name="timeBetweenEvictionRunsMillis" value="34000" />
+	    <property name="minEvictableIdleTimeMillis" value="55000" />
+	    <property name="validationQuery" value="SELECT 1" />
+	    <property name="validationInterval" value="34" />
+	    <property name="testOnBorrow" value="true" />
+	    <property name="removeAbandoned" value="true" />
+	    <property name="removeAbandonedTimeout" value="55" />
+	     -->
+	</bean>
+	
+	<!-- enable autowire -->
+	<context:annotation-config/>
+	
+	<!-- Annotation AspectJ -->
+	<!-- proxy-target-class="true"
+			Target class의 Interface가 필요없어도 되고, jdk proxy를 사용하는 대신 CGLIB2를 사용하여 Proxy를 만든다.
+		 	정적으로 작용하며 동적이 아니라 부하가 준다. -->
+
+    <aop:aspectj-autoproxy />
+    
+	<!-- enable transaction demarcation with annotations -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<bean id="loggingByDB" class="kr.web.dev.common.logging.LoggingByDB"/>
+	
+	<bean id="loggingHandler" class="kr.web.dev.common.logging.LoggingHandler">
+		<property name="logging" ref="loggingByDB" />
+	</bean>
+    
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- define the SqlSessionFactory -->
+	<bean id="defaultSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="kr.web.dev.mapper.**" />
+		<property name="configLocation" value="classpath:resources/mybatis-config.xml" />
+	</bean>
+
+ 	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="kr.web.dev.mapper.**" />
+	</bean>
+	 
+	<!-- Application Message Bundle -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:resources/messages/messages" />
+		<property name="cacheSeconds" value="0" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	<!-- 
+	<aop:config>
+		<aop:aspect id="loggingAspect" ref="loggingAspect">
+			<aop:pointcut id="loggingPointcut" expression="execution(public * *(..))" />
+			<aop:before method="logWrite" pointcut-ref="loggingPointcut" />
+		</aop:aspect>
+	</aop:config>
+	 -->
+</beans>
