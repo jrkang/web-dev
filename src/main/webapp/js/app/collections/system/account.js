@@ -8,8 +8,8 @@ define(function(require) {
 		AccountModel = require('models/system/account');
 
 	var AccountCollection = Backbone.Collection.extend({
-		model : AccountModel,
-		url : "api/account/selectAccounts",
+		model: AccountModel,
+		url: "api/account/selectAccounts",
 	});
 
 	return AccountCollection;

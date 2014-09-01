@@ -15,8 +15,8 @@ define(function(require) {
 	var tpl = require('text!tpl/common/alert.html');
 
 	var AlertView = Backbone.View.extend({
-		alerts : [ 'success', 'error', 'warning', 'info' ],
-		template : _.template(tpl),
+		alerts: ['success', 'error', 'warning', 'info'],
+		template: _.template(tpl),
 
 		/**
 		 * @param {String}
@@ -24,22 +24,21 @@ define(function(require) {
 		 * @param {String}
 		 *            [options.message] message. Default: none
 		 */
-		initialize : function(options) {
+		initialize: function(options) {
 			var message = options.message || '';
 			var alert = options.hasOwnProperty('alert') ? options.alert : 'info';
 
 			if (_.indexOf(this.alerts, alert) === -1) {
-				throw new Error('Invalid alert: [' + alert + '] Must be one of: '
-						+ this.alerts.join(', '));
+				throw new Error('Invalid alert: [' + alert + '] Must be one of: ' + this.alerts.join(', '));
 			}
 
 			this.alert = alert;
 			this.message = message;
 		},
-		render : function() {
+		render: function() {
 			var output = this.template({
-				alert : this.alert,
-				message : this.message
+				alert: this.alert,
+				message: this.message
 			});
 			this.$el.addClass('alert-' + this.alert).html(output).alert();
 			return this;

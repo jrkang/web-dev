@@ -11,18 +11,17 @@ define(function(require) {
 
 	return Backbone.View.extend({
 
-		initialize : function() {
-		},
+		initialize: function() {},
 
-		render : function() {
+		render: function() {
 			this.$el.html(template());
 			$menuItems = $('.navbar .nav li', this.el);
 			return this;
 		},
 
-		events : {},
+		events: {},
 
-		selectMenuItem : function(menuItem) {
+		selectMenuItem: function(menuItem) {
 			$menuItems.removeClass('active');
 			if (menuItem) {
 				$('.' + menuItem + '-menu').addClass('active');

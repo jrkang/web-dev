@@ -10,14 +10,14 @@ define(function(require) {
 		template = _.template(tpl);
 
 	// require model
-	var AccountModel = require('models/system/account'), accountModel = new AccountModel();
+	var AccountModel = require('models/system/account'),
+		accountModel = new AccountModel();
 
 	return Backbone.View.extend({
 
-		initialize : function() {
-		},
+		initialize: function() {},
 
-		render : function(options) {
+		render: function(options) {
 			var self = this;
 			this.$el.empty();
 
@@ -25,16 +25,16 @@ define(function(require) {
 				this.$el.html('<h1>No selected item.</h1>');
 			} else {
 				accountModel.set({
-					username : options.username
+					username: options.username
 				}, {
-					silent : true,
-					validate : false
+					silent: true,
+					validate: false
 				});
 				accountModel.fetch({
-					method : "POST",
-					contentType : 'application/json',
-					data : JSON.stringify(accountModel.toJSON()),
-					success : function(model, response, options) {
+					method: "POST",
+					contentType: 'application/json',
+					data: JSON.stringify(accountModel.toJSON()),
+					success: function(model, response, options) {
 						self.$el.html(template(model.attributes));
 					}
 				});
