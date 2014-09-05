@@ -9,12 +9,15 @@ define(function(require) {
 	// require View
 	var frameView, $container;
 
+	var currentView;
+
 	return Backbone.Router.extend({
 
 		routes: {
 			"": "login",
 			"login": "login",
 			"dashboard": "dashboard",
+			"realtime": "realtime",
 			"sessionExpire": "sessionExpire"
 		},
 		setOptions: function(options) {
@@ -23,24 +26,43 @@ define(function(require) {
 			frameView = options.frameView;
 		},
 		login: function() {
-			$container.empty();
-			$container.removeClass();
-			var LoginView = require('views/login');
-			var loginView = new LoginView({
-				el: $container
-			}).render();
-		},
-		dashboard: function() {
-			require(['views/dashboard'], function(Dashboard) {
-				var dashboard = new Dashboard({
+			$.when(this.closeCurrentView()).done(function() {
+				var LoginView = require('views/login');
+				currentView = new LoginView({
 					el: $container
 				}).render();
 			});
+		},
+		dashboard: function() {
+			$.when(this.closeCurrentView()).done(function() {
+				require(['views/dashboard'], function(Dashboard) {
+					currentView = new Dashboard({
+						el: $container
+					}).render();
+				});
 
-			frameView.selectMenuItem('');
+				frameView.selectMenuItem('');
+			});
+		},
+		realtime: function() {
+			$.when(this.closeCurrentView()).done(function() {
+				require(['views/realtime/usingSockjs'], function(UsingSockjs) {
+					currentView = new UsingSockjs({
+						el: $container
+					}).render();
+				});
+
+				frameView.selectMenuItem('');
+			});
 		},
 		sessionExpire: function() {
 			$('body').html('session expired.');
+		},
+		closeCurrentView: function() {
+			if (currentView !== undefined) {
+				currentView.close();
+				currentView = undefined;
+			}
 		}
 
 	});

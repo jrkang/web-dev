@@ -150,7 +150,8 @@ define(function(require, d3) {
 			});
 
 			return this;
-		}
+		},
+		
 	});
 
 });
